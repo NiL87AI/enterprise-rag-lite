@@ -1,5 +1,7 @@
 # 🚀 Enterprise RAG Lite
 
+![CI](https://github.com/NiL87AI/enterprise-rag-lite/actions/workflows/ci.yml/badge.svg)
+
 Sistema di Retrieval-Augmented Generation (RAG) **100% gratuito, locale e Demo-Ready**, ottimizzato per offrire prestazioni di livello enterprise anche su hardware limitato (es. laptop con 8GB RAM).
 
 ## ✨ Caratteristiche Principali

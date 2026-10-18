@@ -3,6 +3,27 @@ from langchain_core.prompts import ChatPromptTemplate
 from typing import List, Dict, Tuple
 from app.config import settings
 
+REFUSAL_PHRASES = [
+    "non ho trovato",
+    "non sono sicuro",
+    "non è presente",
+    "non posso rispondere",
+    "non disponibile",
+    "nessuna informazione"
+]
+
+def is_refusal(answer: str) -> bool:
+    """True se l'LLM dichiara di non aver trovato l'informazione."""
+    return any(phrase in answer.lower() for phrase in REFUSAL_PHRASES)
+
+def calibrate_confidence(raw_score: float, is_filtered: bool) -> float:
+    """Confidence onesto dalla similarita' coseno del best match.
+    Per nomic-embed-text: <~0.40 match debole, >~0.70 match forte.
+    Rimappa linearmente su 0-1; dimezza se la risposta e' filtrata."""
+    calibrated = (raw_score - 0.40) / (0.70 - 0.40)
+    calibrated = max(0.0, min(calibrated, 1.0))
+    return round(calibrated if not is_filtered else calibrated * 0.5, 2)
+
 class LLMService:
     def __init__(self):
         self.llm = ChatOllama(
@@ -47,26 +68,10 @@ Documenti:
             answer = response.content.strip()
             
             # 3. Controlla se l'LLM ha rifiutato di rispondere
-            refusal_phrases = [
-                "non ho trovato",
-                "non sono sicuro",
-                "non è presente",
-                "non posso rispondere",
-                "non disponibile",
-                "nessuna informazione"
-            ]
-            is_filtered = any(phrase in answer.lower() for phrase in refusal_phrases)
+            is_filtered = is_refusal(answer)
             
-            # 4. Confidence onesta: deriva dalla similarita' coseno reale
-            # del best match (score = 1 - cosine distance, calcolato in chat.py).
-            # Per nomic-embed-text: <~0.40 = match debole, >~0.70 = match forte.
-            # Rimappiamo linearmente quel range su 0-1 e poi penalizziamo
-            # la risposta se l'LLM ha dichiarato di non aver trovato nulla.
-            raw_score = max_confidence
-            calibrated = (raw_score - 0.40) / (0.70 - 0.40)
-            calibrated = max(0.0, min(calibrated, 1.0))
-            display_confidence = calibrated if not is_filtered else calibrated * 0.5
-            display_confidence = round(display_confidence, 2)
+            # 4. Confidence onesto: similarita' reale del best match
+            display_confidence = calibrate_confidence(max_confidence, is_filtered)
             
             return answer, display_confidence, is_filtered
             
