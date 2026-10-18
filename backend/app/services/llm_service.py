@@ -57,17 +57,15 @@ Documenti:
             ]
             is_filtered = any(phrase in answer.lower() for phrase in refusal_phrases)
             
-            # 🚀 4. CALIBRAZIONE DEMO DEFINITIVA (Senza soglie minime)
-            # Se l'AI ha generato una risposta valida (non ha detto "non ho trovato"),
-            # significa che il recupero ha funzionato. Assegniamo una confidence alta (95-99%).
-            if not is_filtered:
-                # Calibra il punteggio tra 95% e 99% per la demo
-                display_confidence = 0.95 + (max_confidence * 0.04)
-                display_confidence = min(display_confidence, 0.99)
-            else:
-                # Se il sistema non ha trovato nulla, mostra una confidence bassa
-                display_confidence = max_confidence
-            
+            # 4. Confidence onesta: deriva dalla similarita' coseno reale
+            # del best match (score = 1 - cosine distance, calcolato in chat.py).
+            # Per nomic-embed-text: <~0.40 = match debole, >~0.70 = match forte.
+            # Rimappiamo linearmente quel range su 0-1 e poi penalizziamo
+            # la risposta se l'LLM ha dichiarato di non aver trovato nulla.
+            raw_score = max_confidence
+            calibrated = (raw_score - 0.40) / (0.70 - 0.40)
+            calibrated = max(0.0, min(calibrated, 1.0))
+            display_confidence = calibrated if not is_filtered else calibrated * 0.5
             display_confidence = round(display_confidence, 2)
             
             return answer, display_confidence, is_filtered
