@@ -8,6 +8,11 @@ class Settings(BaseSettings):
     chunk_size: int = 500
     chunk_overlap: int = 100
     confidence_threshold: float = 0.6
+    # Reranking: recupera molti candidati col vector search, poi li riordina
+    retrieval_candidates: int = 15
+    top_k: int = 3
+    reranker_enabled: bool = True
+    reranker_model: str = "ms-marco-MiniLM-L-12-v2"
     
     class Config:
         env_file = ".env"

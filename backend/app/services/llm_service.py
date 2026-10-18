@@ -14,7 +14,7 @@ class LLMService:
         )
         self.confidence_threshold = settings.confidence_threshold
     
-    def generate_answer(self, query: str, context: List[Dict]) -> Tuple[str, float, bool]:
+    async def generate_answer(self, query: str, context: List[Dict]) -> Tuple[str, float, bool]:
         if not context or len(context) == 0:
             return "Non ho trovato informazioni rilevanti nei documenti caricati.", 0.0, True
         
@@ -40,7 +40,7 @@ Documenti:
         try:
             print(f"Generando risposta con {settings.llm_model}...")
             chain = prompt | self.llm
-            response = chain.invoke({
+            response = await chain.ainvoke({
                 "context": context_text,
                 "query": query
             })

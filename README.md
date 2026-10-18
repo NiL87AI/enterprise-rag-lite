@@ -5,10 +5,11 @@ Sistema di Retrieval-Augmented Generation (RAG) **100% gratuito, locale e Demo-R
 ## ✨ Caratteristiche Principali
 - 🆓 **Zero Costi & 100% Locale**: Nessuna API key esterna. Tutti i dati, i documenti e i modelli rimangono sul tuo computer (Privacy-First).
 - 🧠 **Ricerca Semantica Avanzata**: Utilizza il modello di embedding `nomic-embed-text` per una comprensione profonda del contesto, superando i limiti della semplice ricerca per parole chiave.
+- 🎯 **Reranking Cross-Encoder**: Pipeline in due stadi — il vector search recupera 15 candidati, poi un reranker (`ms-marco-MiniLM-L-12-v2`, ONNX ottimizzato per CPU) li riordina valutando query e passaggio insieme. Aumenta sensibilmente la precisione dei top-3 senza GPU né costi.
 - 🛡️ **Sicurezza Enterprise (Anti-Allucinazione)**: 
   - Prompt strict che forza l'LLM a rispondere *solo* in base ai documenti forniti.
   - Sistema di "Filtraggio" attivo: se l'informazione non è presente, il sistema lo dichiara esplicitamente invece di inventare.
-- 📊 **Confidence Score Reale**: Mostra un punteggio di affidabilità derivato dalla similarità coseno del "Best Match" semantico (calibrato sul range effettivo del modello di embedding), dimezzato quando il sistema dichiara di non aver trovato la risposta.
+- 📊 **Confidence Score Reale**: Punteggio di affidabilità derivato dalla similarità coseno del best match post-reranking (calibrato sul range effettivo del modello di embedding), dimezzato quando il sistema dichiara di non aver trovato la risposta.
 - 🚫 **Smart Upload Validation**: Il backend analizza automaticamente i file in ingresso e blocca il caricamento di report generati dal sistema stesso, prevenendo il degrado della qualità dei dati (Garbage-In-Garbage-Out).
 - 📚 **Citazione delle Fonti**: Ogni risposta è collegata ai paragrafi esatti del documento originale, con punteggio di corrispondenza (Match %) visibile.
 
@@ -16,6 +17,7 @@ Sistema di Retrieval-Augmented Generation (RAG) **100% gratuito, locale e Demo-R
 - **Backend**: FastAPI + Python (con validazione avanzata dei dati)
 - **Frontend**: Next.js 14 + React + Tailwind CSS
 - **Vector Database**: ChromaDB (locale, persistente)
+- **Reranker**: FlashRank `ms-marco-MiniLM-L-12-v2` (cross-encoder ONNX, CPU)
 - **LLM**: Ollama (`llama3.2:3b` per velocità e efficienza)
 - **Embeddings**: Ollama (`nomic-embed-text` per alta precisione semantica)
 
