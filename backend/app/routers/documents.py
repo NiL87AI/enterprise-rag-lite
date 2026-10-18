@@ -1,6 +1,7 @@
 ﻿from fastapi import APIRouter, UploadFile, File, HTTPException
 from app.services.pdf_processor import PDFProcessor
 from app.services.vector_store import VectorStore
+from app.services.bm25_store import bm25_store
 from app.config import settings
 import uuid
 
@@ -47,6 +48,7 @@ async def upload_document(file: UploadFile = File(...)):
         print(f"Diviso in {len(chunks)} chunk")
         document_id = str(uuid.uuid4())
         vector_store.add_documents(chunks, document_id, file.filename)
+        bm25_store.add_documents(chunks, document_id, file.filename)
         
         return {
             "document_id": document_id,
@@ -63,6 +65,7 @@ async def delete_document(document_id: str):
     try:
         print(f"Eliminazione documento ID: {document_id}")
         vector_store.delete_document(document_id)
+        bm25_store.delete_document(document_id)
         return {"status": "success", "message": f"Documento {document_id} eliminato"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

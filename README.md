@@ -7,7 +7,8 @@ Sistema di Retrieval-Augmented Generation (RAG) **100% gratuito, locale e Demo-R
 ## ✨ Caratteristiche Principali
 - 🆓 **Zero Costi & 100% Locale**: Nessuna API key esterna. Tutti i dati, i documenti e i modelli rimangono sul tuo computer (Privacy-First).
 - 🧠 **Ricerca Semantica Avanzata**: Utilizza il modello di embedding `nomic-embed-text` per una comprensione profonda del contesto, superando i limiti della semplice ricerca per parole chiave.
-- 🎯 **Reranking Cross-Encoder**: Pipeline in due stadi — il vector search recupera 15 candidati, poi un reranker (`ms-marco-MiniLM-L-12-v2`, ONNX ottimizzato per CPU) li riordina valutando query e passaggio insieme. Aumenta sensibilmente la precisione dei top-3 senza GPU né costi.
+- 🔍 **Hybrid Search (BM25 + Semantico + RRF)**: Retrieval in due canali paralleli — BM25 per keyword/codici esatti e vector search per il significato — fusi con **Reciprocal Rank Fusion** (k=60). Copre sia query semantiche sia codici precisi (protocolli, numeri di parte), il punto debole tipico dei RAG solo-vettoriali.
+- 🎯 **Reranking Cross-Encoder**: Pipeline in due stadi — il retrieval ibrido recupera 15 candidati, poi un reranker (`ms-marco-MiniLM-L-12-v2`, ONNX ottimizzato per CPU) li riordina valutando query e passaggio insieme. Aumenta sensibilmente la precisione dei top-3 senza GPU né costi.
 - 🛡️ **Sicurezza Enterprise (Anti-Allucinazione)**: 
   - Prompt strict che forza l'LLM a rispondere *solo* in base ai documenti forniti.
   - Sistema di "Filtraggio" attivo: se l'informazione non è presente, il sistema lo dichiara esplicitamente invece di inventare.
@@ -20,6 +21,7 @@ Sistema di Retrieval-Augmented Generation (RAG) **100% gratuito, locale e Demo-R
 - **Backend**: FastAPI + Python (con validazione avanzata dei dati)
 - **Frontend**: Next.js 14 + React + Tailwind CSS
 - **Vector Database**: ChromaDB (locale, persistente)
+- **Keyword Search**: BM25 (`rank_bm25`) + Reciprocal Rank Fusion
 - **Reranker**: FlashRank `ms-marco-MiniLM-L-12-v2` (cross-encoder ONNX, CPU)
 - **LLM**: Ollama (`llama3.2:3b` per velocità e efficienza)
 - **Embeddings**: Ollama (`nomic-embed-text` per alta precisione semantica)

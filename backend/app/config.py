@@ -13,6 +13,9 @@ class Settings(BaseSettings):
     top_k: int = 3
     reranker_enabled: bool = True
     reranker_model: str = "ms-marco-MiniLM-L-12-v2"
+    # Hybrid search: fonde BM25 (keyword) + vector search (semantico) via RRF
+    hybrid_search_enabled: bool = True
+    rrf_k: int = 60
     
     class Config:
         env_file = ".env"
