@@ -1,0 +1,77 @@
+{
+  "_istruzioni": "Sostituisci queste domande di esempio con domande REALI sui TUOI PDF. Regole: 'must_contain' = parole/frasi che devono apparire nella risposta (minuscole); 'expected_source' = nome file del PDF che contiene la risposta; 'expect_filtered' = true per domande trappola la cui risposta NON e' nei documenti.",
+  "questions": [
+    {
+      "id": "policy-01",
+      "category": "policy",
+      "question": "Quanti giorni di ferie spettano a un dipendente full-time?",
+      "must_contain": ["giorni"],
+      "expected_source": "policy_ferie.pdf",
+      "expect_filtered": false
+    },
+    {
+      "id": "policy-02",
+      "category": "policy",
+      "question": "Qual e' la procedura per richiedere lo smart working?",
+      "must_contain": [],
+      "expected_source": "policy_smart_working.pdf",
+      "expect_filtered": false
+    },
+    {
+      "id": "policy-03",
+      "category": "policy",
+      "question": "Come viene gestito il rimborso spese per le trasferte?",
+      "must_contain": [],
+      "expected_source": "policy_trasferte.pdf",
+      "expect_filtered": false
+    },
+    {
+      "id": "tech-01",
+      "category": "technical",
+      "question": "Qual e' la coppia di serraggio dei bulloni della flangia?",
+      "must_contain": [],
+      "expected_source": "manuale_tecnico.pdf",
+      "expect_filtered": false
+    },
+    {
+      "id": "tech-02",
+      "category": "technical",
+      "question": "Qual e' il range di temperatura operativa del sensore?",
+      "must_contain": [],
+      "expected_source": "datasheet_sensore.pdf",
+      "expect_filtered": false
+    },
+    {
+      "id": "tech-03",
+      "category": "technical",
+      "question": "Ogni quante ore di funzionamento va fatta la manutenzione?",
+      "must_contain": ["ore"],
+      "expected_source": "manuale_manutenzione.pdf",
+      "expect_filtered": false
+    },
+    {
+      "id": "trap-01",
+      "category": "trap",
+      "question": "Chi e' il CEO dell'azienda?",
+      "must_contain": [],
+      "expected_source": null,
+      "expect_filtered": true
+    },
+    {
+      "id": "trap-02",
+      "category": "trap",
+      "question": "Qual e' la ricetta della carbonara?",
+      "must_contain": [],
+      "expected_source": null,
+      "expect_filtered": true
+    },
+    {
+      "id": "trap-03",
+      "category": "trap",
+      "question": "Quanto costa il biglietto del treno Milano-Roma?",
+      "must_contain": [],
+      "expected_source": null,
+      "expect_filtered": true
+    }
+  ]
+}

@@ -12,6 +12,7 @@ Sistema di Retrieval-Augmented Generation (RAG) **100% gratuito, locale e Demo-R
 - 📊 **Confidence Score Reale**: Punteggio di affidabilità derivato dalla similarità coseno del best match post-reranking (calibrato sul range effettivo del modello di embedding), dimezzato quando il sistema dichiara di non aver trovato la risposta.
 - 🚫 **Smart Upload Validation**: Il backend analizza automaticamente i file in ingresso e blocca il caricamento di report generati dal sistema stesso, prevenendo il degrado della qualità dei dati (Garbage-In-Garbage-Out).
 - 📚 **Citazione delle Fonti**: Ogni risposta è collegata ai paragrafi esatti del documento originale, con punteggio di corrispondenza (Match %) visibile.
+- 🧪 **Eval Harness Integrato**: Script in `backend/eval/` che misura su dataset reale *answer accuracy*, *retrieval hit rate* e *refusal accuracy* (domande trappola). Genera report JSON + Markdown: le metriche sono misurate, non dichiarate.
 
 ## 🛠️ Stack Tecnologico
 - **Backend**: FastAPI + Python (con validazione avanzata dei dati)
