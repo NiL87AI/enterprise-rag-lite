@@ -12,9 +12,10 @@ Sistema di Retrieval-Augmented Generation (RAG) **100% gratuito, locale e Demo-R
 - 🛡️ **Sicurezza Enterprise (Anti-Allucinazione)**: 
   - Prompt strict che forza l'LLM a rispondere *solo* in base ai documenti forniti.
   - Sistema di "Filtraggio" attivo: se l'informazione non è presente, il sistema lo dichiara esplicitamente invece di inventare.
-- 📊 **Confidence Score Reale**: Punteggio di affidabilità derivato dalla similarità coseno del best match post-reranking (calibrato sul range effettivo del modello di embedding), dimezzato quando il sistema dichiara di non aver trovato la risposta.
-- 🚫 **Smart Upload Validation**: Il backend analizza automaticamente i file in ingresso e blocca il caricamento di report generati dal sistema stesso, prevenendo il degrado della qualità dei dati (Garbage-In-Garbage-Out).
-- 📚 **Citazione delle Fonti**: Ogni risposta è collegata ai paragrafi esatti del documento originale, con punteggio di corrispondenza (Match %) visibile.
+- 📊 **Confidence Score Reale**: Punteggio di affidabilità che combina la similarità coseno di `nomic-embed-text` (calibrata sul range reale su testo italiano) e lo score del cross-encoder reranker, abbattuto automaticamente (<35%) quando il sistema filtra una domanda fuori contesto.
+- 🚫 **Smart Upload Validation & Deduplicazione**: Il backend analizza automaticamente i file in ingresso bloccando il caricamento di report auto-generati (prevenendo il degrado Garbage-In-Garbage-Out) e deduplica i chunk identici in fase di retrieval.
+- 📚 **Citazione delle Fonti & Export PDF**: Ogni risposta è collegata ai paragrafi esatti del documento originale con punteggio di corrispondenza (Match %) calibrato, cronologia conversazioni salvata localmente ed esportazione dell'analisi in PDF.
+- ⚡ **Ottimizzato per 8GB RAM (CPU-First)**: Finestra di contesto (`num_ctx=1024`), generazione controllata (`num_predict=220`) e `keep_alive` dei modelli in memoria per evitare swap su disco anche su laptop senza GPU dedicata.
 - 🧪 **Eval Harness Integrato**: Script in `backend/eval/` che misura su dataset reale *answer accuracy*, *retrieval hit rate* e *refusal accuracy* (domande trappola). Genera report JSON + Markdown: le metriche sono misurate, non dichiarate.
 
 ## 🛠️ Stack Tecnologico
@@ -58,7 +59,7 @@ cd frontend
 npm install
 npm run dev
 ```
-Apri `http://localhost:3000` nel browser, carica un PDF dalla barra laterale e inizia a fare domande.
+Apri `http://localhost:3000` nel browser (oppure `npm run dev -- -p 3001` su `http://localhost:3001` se la porta 3000 è già occupata), carica un PDF dalla barra laterale e inizia a fare domande.
 
 ## 🧪 Test & Valutazione (Eval Harness)
 
