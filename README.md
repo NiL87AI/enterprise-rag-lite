@@ -40,3 +40,41 @@ Apri il terminale e lancia questi comandi per ottenere le ultime versioni ottimi
 ollama pull llama3.2:3b
 ollama pull nomic-embed-text
 ```
+
+### 3. Avvia il Backend (FastAPI)
+```bash
+cd backend
+python -m venv venv
+# Su Windows: venv\Scripts\activate | Su macOS/Linux: source venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+Il backend sarà attivo su `http://localhost:8000` (documentazione interattiva su `http://localhost:8000/docs`).
+
+### 4. Avvia il Frontend (Next.js)
+In un secondo terminale:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+Apri `http://localhost:3000` nel browser, carica un PDF dalla barra laterale e inizia a fare domande.
+
+## 🧪 Test & Valutazione (Eval Harness)
+
+### Unit & Integration Tests
+La suite di test copre API, chunking PDF, hybrid search (BM25 + RRF), calibrazione del confidence e rilevamento dei rifiuti (senza richiedere Ollama attivo):
+```bash
+cd backend
+pip install -r requirements-dev.txt
+python -m pytest tests/ -v
+```
+
+### Evaluation End-to-End
+Con Ollama in esecuzione e i documenti di test caricati, puoi misurare **answer accuracy**, **retrieval hit rate** e **refusal accuracy** sul dataset di valutazione:
+```bash
+cd backend
+python -m eval.run_eval
+```
+Lo script stampa il riepilogo a terminale e genera `backend/eval/eval_report.json` e `backend/eval/eval_report.md`.
+

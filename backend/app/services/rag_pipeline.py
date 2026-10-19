@@ -34,18 +34,28 @@ def retrieve_candidates(query: str, document_ids: Optional[List[str]] = None) ->
             })
 
     if not settings.hybrid_search_enabled:
-        return vector_ranking
+        fused = vector_ranking
+    else:
+        # BM25 search (keyword) + fusione RRF
+        bm25_ranking = bm25_store.search(
+            query,
+            n_results=settings.retrieval_candidates,
+            document_ids=document_ids
+        )
+        # I doc fusi via RRF prendono 'score' dal ranking vettoriale quando
+        # disponibile (serve per il confidence), altrimenti 0.
+        fused = rrf_fuse([vector_ranking, bm25_ranking],
+                         top_n=settings.retrieval_candidates)
 
-    # BM25 search (keyword) + fusione RRF
-    bm25_ranking = bm25_store.search(
-        query,
-        n_results=settings.retrieval_candidates,
-        document_ids=document_ids
-    )
-    # I doc fusi via RRF prendono 'score' dal ranking vettoriale quando
-    # disponibile (serve per il confidence), altrimenti 0.
-    return rrf_fuse([vector_ranking, bm25_ranking],
-                    top_n=settings.retrieval_candidates)
+    # Deduplica chunk con contenuto identico (es. stesso PDF caricato piu' volte)
+    seen_contents = set()
+    unique_candidates = []
+    for doc in fused:
+        norm = doc["content"].strip()
+        if norm not in seen_contents:
+            seen_contents.add(norm)
+            unique_candidates.append(doc)
+    return unique_candidates
 
 
 async def run_rag(

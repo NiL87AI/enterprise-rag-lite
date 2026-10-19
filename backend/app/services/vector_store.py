@@ -8,7 +8,8 @@ class VectorStore:
         self.client = chromadb.PersistentClient(path="./chroma_db")
         self.embeddings = OllamaEmbeddings(
             model=settings.embedding_model,
-            base_url=settings.ollama_base_url
+            base_url=settings.ollama_base_url,
+            keep_alive=1800
         )
         self.collection = self.client.get_or_create_collection(
             name=settings.collection_name,

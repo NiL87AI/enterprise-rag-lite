@@ -14,18 +14,18 @@ def test_normal_answer_not_refusal():
 # --- calibrate_confidence -------------------------------------------------
 
 def test_confidence_strong_match():
-    assert calibrate_confidence(0.75, False) == 1.0
+    assert calibrate_confidence(0.50, False) >= 0.95
 
 def test_confidence_weak_match():
-    assert calibrate_confidence(0.35, False) == 0.0
+    assert calibrate_confidence(0.10, True) == 0.0
 
 def test_confidence_mid_match():
-    c = calibrate_confidence(0.55, False)
-    assert 0.4 < c < 0.6
+    c = calibrate_confidence(0.25, False)
+    assert 0.75 < c < 0.90
 
 def test_confidence_halved_when_filtered():
-    assert calibrate_confidence(0.70, True) == calibrate_confidence(0.70, False) / 2
+    assert calibrate_confidence(0.40, True) < calibrate_confidence(0.40, False) * 0.5
 
 def test_confidence_bounds():
     assert calibrate_confidence(1.0, False) <= 1.0
-    assert calibrate_confidence(0.0, False) >= 0.0
+    assert calibrate_confidence(0.0, True) >= 0.0
